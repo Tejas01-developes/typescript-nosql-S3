@@ -107,15 +107,33 @@ type filedata={
     filename:string,
     key:string,
     extension:string
+    url:string
 }
 
 export const filemetadata=async(data:filedata):Promise<string>=>{
 try{
-const insetfiledta=await database.collection(process.env.FILE_COLLECTION as string).insertOne({userid:data.userid,filename:data.filename,key:data.key,extension:data.extension})
+const insetfiledta=await database.collection(process.env.FILE_COLLECTION as string).insertOne({userid:data.userid,filename:data.filename,key:data.key,extension:data.extension,url:data.url})
 return "file uploaded"
 
 }catch(err){
     return "file upload error"
 }
 
+}
+
+type filedta={
+id:string
+}
+
+type returnfiledata={
+    url:string,
+}
+
+export const getfiledta=async(data:filedta):Promise<returnfiledata | null>=>{
+try{
+    const res=await database.collection(process.env.FILE_COLLECTION as string).findOne<returnfiledata>({userid:data.id})
+    return res
+}catch(err){
+return null
+}
 }

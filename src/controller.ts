@@ -1,6 +1,6 @@
 import  { Request, Response } from "express";
 import bcrypt from "bcrypt"
-import { filemetadata, getdetail, gettkndetails, insertquery, inserttoken, updatetokendetail } from "./service.js";
+import { filemetadata, getdetail, getfiledta, gettkndetails, insertquery, inserttoken, updatetokendetail } from "./service.js";
 import { accesstoken, refreshtoken } from "./tokens.js";
 import {  PutObjectCommand } from "@aws-sdk/client-s3";
 import { client } from "./fileupload.js";
@@ -110,10 +110,10 @@ export const insertfile=async(req:filerequest,resp:Response):Promise<void>=>{
       } 
       try{
       await client.send(new PutObjectCommand(params));
-      const url=`https://${process.env.BUCKET}.client.${process.env.AWS_REGION}.amazonaws.com/${uniquename}`
+      const url=`https://${process.env.BUCKET as string}.s3.${process.env.AWS_REGION as string}.amazonaws.com/${uniquename}`
       const userid=req.id
 
-      const insert=await filemetadata({userid:userid,filename:filename,key:uniquename,extension:req.file.mimetype})
+      const insert=await filemetadata({userid:userid,filename:filename,key:uniquename,extension:req.file.mimetype,url:url})
       resp.status(200).json({success:true,message:"file insert succesfull"})
       return 
 
@@ -121,4 +121,22 @@ export const insertfile=async(req:filerequest,resp:Response):Promise<void>=>{
            resp.status(400).json({success:false,message:"unable to insert image"})
            return
       }
+ }
+
+type data=Request&{
+     id:string
+}
+
+ export const getfile=async(req:data,resp:Response):Promise<void>=>{
+     if(!req.id){
+          resp.status(400).json({success:false,message:"login first for token"})
+          return 
+     }
+     try{
+const getfiledetail=await getfiledta({id:req.id});
+const url=getfiledetail?.url;
+
+
+
+     }
  }

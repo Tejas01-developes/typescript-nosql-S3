@@ -20,7 +20,7 @@ export const refreshtoken=(data:tokendata):string=>{
     return jwt.sign(
        {id:data.id},
        process.env.REFRESH_KEY as string,
-       {expiresIn:'15m'}
+       {expiresIn:'7d'}
    )
    
    }
