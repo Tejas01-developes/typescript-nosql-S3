@@ -38,6 +38,7 @@ type filedata = {
     filename: string;
     key: string;
     extension: string;
+    url: string;
 };
 export declare const filemetadata: (data: filedata) => Promise<string>;
 export {};

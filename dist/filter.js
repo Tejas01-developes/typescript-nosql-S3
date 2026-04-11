@@ -9,10 +9,10 @@ export const cookiefilter = (req, resp, next) => {
     try {
         const decode = jwt.verify(refreshtoken, process.env.REFRESH_KEY);
         req.id = decode.id;
-        console.log(req.id);
         next();
     }
     catch (err) {
+        console.log("JWT ERROR", err);
         return resp.status(400).json({ success: false, message: "token filter failed" });
     }
 };

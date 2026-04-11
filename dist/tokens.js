@@ -5,6 +5,6 @@ export const accesstoken = (data) => {
     return jwt.sign({ id: data.id }, process.env.ACCESS_KEY, { expiresIn: '15m' });
 };
 export const refreshtoken = (data) => {
-    return jwt.sign({ id: data.id }, process.env.REFRESH_KEY, { expiresIn: '15m' });
+    return jwt.sign({ id: data.id }, process.env.REFRESH_KEY, { expiresIn: '7d' });
 };
 //# sourceMappingURL=tokens.js.map

@@ -85,9 +85,9 @@ export const insertfile = async (req, resp) => {
     };
     try {
         await client.send(new PutObjectCommand(params));
-        const url = `https://${process.env.BUCKET}.client.${process.env.AWS_REGION}.amazonaws.com/${uniquename}`;
+        const url = `https://${process.env.BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${uniquename}`;
         const userid = req.id;
-        const insert = await filemetadata({ userid: userid, filename: filename, key: uniquename, extension: req.file.mimetype });
+        const insert = await filemetadata({ userid: userid, filename: filename, key: uniquename, extension: req.file.mimetype, url: url });
         resp.status(200).json({ success: true, message: "file insert succesfull" });
         return;
     }

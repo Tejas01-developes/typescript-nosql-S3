@@ -52,7 +52,7 @@ export const inserttoken = async (data) => {
 };
 export const filemetadata = async (data) => {
     try {
-        const insetfiledta = await database.collection(process.env.FILE_COLLECTION).insertOne({ userid: data.userid, filename: data.filename, key: data.key, extension: data.extension });
+        const insetfiledta = await database.collection(process.env.FILE_COLLECTION).insertOne({ userid: data.userid, filename: data.filename, key: data.key, extension: data.extension, url: data.url });
         return "file uploaded";
     }
     catch (err) {
