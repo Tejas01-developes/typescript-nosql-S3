@@ -59,4 +59,13 @@ export const filemetadata = async (data) => {
         return "file upload error";
     }
 };
+export const getfiledta = async (data) => {
+    try {
+        const res = await database.collection(process.env.FILE_COLLECTION).findOne({ userid: data.id });
+        return res;
+    }
+    catch (err) {
+        return null;
+    }
+};
 //# sourceMappingURL=service.js.map

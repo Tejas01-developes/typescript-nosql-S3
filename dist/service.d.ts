@@ -41,5 +41,13 @@ type filedata = {
     url: string;
 };
 export declare const filemetadata: (data: filedata) => Promise<string>;
+type filedta = {
+    id: string;
+};
+type returnfiledata = {
+    url: string;
+    key: string;
+};
+export declare const getfiledta: (data: filedta) => Promise<returnfiledata | null>;
 export {};
 //# sourceMappingURL=service.d.ts.map

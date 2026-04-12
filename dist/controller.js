@@ -1,9 +1,10 @@
 import bcrypt from "bcrypt";
-import { filemetadata, getdetail, gettkndetails, insertquery, inserttoken, updatetokendetail } from "./service.js";
+import { filemetadata, getdetail, getfiledta, gettkndetails, insertquery, inserttoken, updatetokendetail } from "./service.js";
 import { accesstoken, refreshtoken } from "./tokens.js";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { client } from "./fileupload.js";
 import multer from "multer";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 export const insertuser = async (req, resp) => {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
@@ -93,6 +94,35 @@ export const insertfile = async (req, resp) => {
     }
     catch (err) {
         resp.status(400).json({ success: false, message: "unable to insert image" });
+        return;
+    }
+};
+export const getfile = async (req, resp) => {
+    if (!req.id) {
+        resp.status(400).json({ success: false, message: "login first for token" });
+        return;
+    }
+    try {
+        const getfiledetail = await getfiledta({ id: req.id });
+        if (!getfiledetail) {
+            resp.status(400).json({ success: false, message: "file detaqils is not there in the database" });
+            return;
+        }
+        const key = getfiledetail.key;
+        const getfile = new GetObjectCommand({
+            Bucket: process.env.BUCKET,
+            Key: key
+        });
+        // const data=await client.send(getfile);
+        // resp.setHeader("Content-Type",data.ContentType || "application/octet-stream");
+        // (data.Body as any).pipe(resp)
+        const signedurl = await getSignedUrl(client, getfile, { expiresIn: 3600 });
+        resp.json(signedurl);
+        // console.log(signedurl)
+        return;
+    }
+    catch (err) {
+        resp.status(400).json({ success: false, message: "file fetch failed" });
         return;
     }
 };

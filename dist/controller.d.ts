@@ -17,5 +17,9 @@ interface filerequest extends Request {
     id: string;
 }
 export declare const insertfile: (req: filerequest, resp: Response) => Promise<void>;
+type data = Request & {
+    id: string;
+};
+export declare const getfile: (req: data, resp: Response) => Promise<void>;
 export {};
 //# sourceMappingURL=controller.d.ts.map
