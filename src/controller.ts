@@ -2,9 +2,10 @@ import  { Request, Response } from "express";
 import bcrypt from "bcrypt"
 import { filemetadata, getdetail, getfiledta, gettkndetails, insertquery, inserttoken, updatetokendetail } from "./service.js";
 import { accesstoken, refreshtoken } from "./tokens.js";
-import {  PutObjectCommand } from "@aws-sdk/client-s3";
+import {  GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { client } from "./fileupload.js";
 import multer, { Multer } from "multer";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 
 type bodydata={
@@ -134,9 +135,30 @@ type data=Request&{
      }
      try{
 const getfiledetail=await getfiledta({id:req.id});
-const url=getfiledetail?.url;
+if(!getfiledetail){
+      resp.status(400).json({success:false,message:"file detaqils is not there in the database"})
+      return
+}
+
+const key:string=getfiledetail.key;
+
+const getfile=new GetObjectCommand({
+     Bucket:process.env.BUCKET as string,
+     Key:key as string
+})
+
+// const data=await client.send(getfile);
+// resp.setHeader("Content-Type",data.ContentType || "application/octet-stream");
+// (data.Body as any).pipe(resp)
 
 
+const signedurl:string=await getSignedUrl(client,getfile,{expiresIn:3600})
+resp.json(signedurl)
+// console.log(signedurl)
+return
 
+     }catch(err){
+          resp.status(400).json({success:false,message:"file fetch failed"})
+          return    
      }
  }

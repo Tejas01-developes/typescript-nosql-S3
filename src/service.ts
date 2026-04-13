@@ -127,6 +127,7 @@ id:string
 
 type returnfiledata={
     url:string,
+    key:string
 }
 
 export const getfiledta=async(data:filedta):Promise<returnfiledata | null>=>{
