@@ -31,7 +31,7 @@ export const gettkndetails = async (data) => {
 };
 export const updatetokendetail = async (data) => {
     try {
-        const refreshdetailsupdate = await database.collection(process.env.TOKEN_COLLECTION).updateOne({ token: data.token }, {
+        await database.collection(process.env.TOKEN_COLLECTION).updateOne({ token: data.token }, {
             $set: { added_at: new Date(Date.now()), expired_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
             }
         });
@@ -43,7 +43,7 @@ export const updatetokendetail = async (data) => {
 };
 export const inserttoken = async (data) => {
     try {
-        const inserttoken = await database.collection(process.env.TOKEN_COLLECTION).insertOne({ userid: data.userid, token: data.token, added_at: new Date(Date.now()), expired_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) });
+        await database.collection(process.env.TOKEN_COLLECTION).insertOne({ userid: data.userid, token: data.token, added_at: new Date(Date.now()), expired_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) });
         return "token inserted";
     }
     catch (err) {
@@ -52,7 +52,7 @@ export const inserttoken = async (data) => {
 };
 export const filemetadata = async (data) => {
     try {
-        const insetfiledta = await database.collection(process.env.FILE_COLLECTION).insertOne({ userid: data.userid, filename: data.filename, key: data.key, extension: data.extension, url: data.url });
+        await database.collection(process.env.FILE_COLLECTION).insertOne({ userid: data.userid, filename: data.filename, key: data.key, extension: data.extension, url: data.url });
         return "file uploaded";
     }
     catch (err) {
