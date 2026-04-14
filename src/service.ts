@@ -77,7 +77,7 @@ type updatedta={
 
 export const updatetokendetail=async(data:updatedta):Promise<boolean | string>=>{
     try{
-        const refreshdetailsupdate=await database.collection(process.env.TOKEN_COLLECTION as string).updateOne({token:data.token},{
+        await database.collection(process.env.TOKEN_COLLECTION as string).updateOne({token:data.token},{
             $set:{added_at:new Date(Date.now()),expired_at:new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
             }})
        return true
@@ -95,7 +95,7 @@ export const updatetokendetail=async(data:updatedta):Promise<boolean | string>=>
 
     export const inserttoken=async(data:inserttkndta):Promise<string>=>{
         try{
-            const inserttoken=await database.collection(process.env.TOKEN_COLLECTION as string).insertOne({userid:data.userid,token:data.token,added_at:new Date(Date.now()),expired_at:new Date(Date.now() +  7 * 24 * 60 * 60 * 1000)}) 
+            await database.collection(process.env.TOKEN_COLLECTION as string).insertOne({userid:data.userid,token:data.token,added_at:new Date(Date.now()),expired_at:new Date(Date.now() +  7 * 24 * 60 * 60 * 1000)}) 
             return "token inserted"
         }catch(err){
             return "token insertion failed"
@@ -112,7 +112,7 @@ type filedata={
 
 export const filemetadata=async(data:filedata):Promise<string>=>{
 try{
-const insetfiledta=await database.collection(process.env.FILE_COLLECTION as string).insertOne({userid:data.userid,filename:data.filename,key:data.key,extension:data.extension,url:data.url})
+await database.collection(process.env.FILE_COLLECTION as string).insertOne({userid:data.userid,filename:data.filename,key:data.key,extension:data.extension,url:data.url})
 return "file uploaded"
 
 }catch(err){

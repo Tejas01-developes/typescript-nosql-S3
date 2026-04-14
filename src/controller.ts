@@ -22,7 +22,7 @@ export const insertuser=async(req:Request<{},{},bodydata>,resp:Response):Promise
     }
     const hash:string=await bcrypt.hash(password,10);
     try{
-const insert=await insertquery({name,email,password:hash})
+await insertquery({name,email,password:hash})
  resp.status(200).json({success:true,message:"insert success"})
  return
     }catch(err){
@@ -59,13 +59,13 @@ export const login=async(req:Request<{},{},bodydta>,resp:Response):Promise<void>
        const finddetails=await gettkndetails({userid:details._id.toString()})
        if(!finddetails){
         refresh=refreshtoken({id:details._id})
-        const insert=await inserttoken({userid:details._id.toString(),token:refresh})
+        await inserttoken({userid:details._id.toString(),token:refresh})
        }else{
        const now= Date.now();
        const expireddate=finddetails.expired_at;
        if(now > expireddate){
         refresh=refreshtoken({id:details._id})
-        const update=await updatetokendetail({token:refresh})
+       await updatetokendetail({token:refresh})
        }
        refresh=finddetails.token
         
@@ -114,7 +114,7 @@ export const insertfile=async(req:filerequest,resp:Response):Promise<void>=>{
       const url=`https://${process.env.BUCKET as string}.s3.${process.env.AWS_REGION as string}.amazonaws.com/${uniquename}`
       const userid=req.id
 
-      const insert=await filemetadata({userid:userid,filename:filename,key:uniquename,extension:req.file.mimetype,url:url})
+     await filemetadata({userid:userid,filename:filename,key:uniquename,extension:req.file.mimetype,url:url})
       resp.status(200).json({success:true,message:"file insert succesfull"})
       return 
 
